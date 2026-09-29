@@ -1,46 +1,25 @@
+# robot36
 
-# Robot36 - SSTV Image Decoder
+本仓库是「robot36」的安卓版本获取入口，附使用资料索引。
 
-## Audio Line-Level to Microphone-Level Converter
-Decoding SSTV signals is more reliable with a clean input. Using a direct cable connection instead of acoustic coupling avoids echo, distortion, and environmental noise.
+## 安装文件资源（夸克网盘）
 
-Most smartphones use TRRS connectors for headsets. In these connectors, the sleeve and the second ring (next to the sleeve) serve dual roles: depending on the standard, one is the microphone input and the other is ground. The tip and first ring carry the left and right audio channels.
+> **robot36 安装文件资源（夸克网盘）**：[https://pan.quark.cn/s/00a4cb68900b](https://pan.quark.cn/s/00a4cb68900b)
 
-When a TRS plug is inserted into a TRRS jack, the sleeve and second ring are shorted together. This allows regular stereo headphones (without a microphone) to work correctly.
+## 官方项目
 
-Instead of determining which pin is MIC or GND for each device, galvanic isolation can be used. This avoids compatibility issues, eliminates ground loops, protects against damage, and improves robustness.
+- 上游项目：[xdsopl/robot36](https://github.com/xdsopl/robot36)
 
-Using a line-level output (e.g., from a radio or sound card) as a microphone input introduces several challenges:
+## 更多资料
 
-* Line-level signals swing around 1 V, while electret microphones produce signals in the millivolt range, so attenuation is needed.
-* Electret microphones are biased via the TRRS connector, allowing their internal amplifiers to function. This bias must be blocked to avoid distortion.
-* To make the smartphone recognize the input as a microphone, a resistor must be placed between the second ring and sleeve.
+- [下载与安装教程](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/robot36/%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)
+- [ISS空间站SSTV接收指南](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/robot36/ISS%E7%A9%BA%E9%97%B4%E7%AB%99SSTV%E6%8E%A5%E6%94%B6%E6%8C%87%E5%8D%97.md)
+- [SSTV收图入门](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/robot36/SSTV%E6%94%B6%E5%9B%BE%E5%85%A5%E9%97%A8.md)
+- [短波SSTV频率与收听时机](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/robot36/%E7%9F%AD%E6%B3%A2SSTV%E9%A2%91%E7%8E%87%E4%B8%8E%E6%94%B6%E5%90%AC%E6%97%B6%E6%9C%BA.md)
+- [解码失败与图像异常排查](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/robot36/%E8%A7%A3%E7%A0%81%E5%A4%B1%E8%B4%A5%E4%B8%8E%E5%9B%BE%E5%83%8F%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5.md)
+- [音频线直连接收](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/robot36/%E9%9F%B3%E9%A2%91%E7%BA%BF%E7%9B%B4%E8%BF%9E%E6%8E%A5%E6%94%B6.md)
+- [全部软件目录](https://github.com/alipymanbu/Android/blob/master/%E5%85%A8%E9%83%A8%E8%BD%AF%E4%BB%B6%E7%9B%AE%E5%BD%95.md)
 
-To reduce power consumption on the line-out device, a higher impedance can be achieved by inserting a resistor in series with the primary winding of a 1:1 audio transformer. If the source cannot drive high impedance, the primary can be connected directly, and attenuation applied on the secondary side. This increases power consumption and may heat the transformer.
+---
 
-Because the electret mic input is high-impedance and AC-coupled, the transformer’s secondary can resonate if left unterminated. Adding a resistor across the secondary dampens this resonance and flattens the frequency response. A value equal to the transformer’s impedance is typical, but a lower value can be used to both improve damping and provide additional attenuation. The ratio of the series resistor on the primary to the parallel resistor on the secondary determines the overall attenuation.
-
-### Example Values
-* Transformer: 1:1 audio transformer, 600 Ω impedance, 140 Ω DC resistance
-* Primary side: 2.2 kΩ resistor in series (any value between 1 kΩ and 10 kΩ is fine; a 10 kΩ potentiometer allows adjustment)
-* Secondary side: 100 Ω resistor across the winding for damping and attenuation
-* DC blocking capacitor: 2.2 µF film capacitor (anything between 1 µF and 100 µF works; avoid values below 1 µF to keep low-frequency SSTV content intact)
-* Microphone sensing resistor: 2.2 kΩ between the second ring and sleeve (values near 2 kΩ are fine)
-
-### Schematic
-```
- [Line IN] O---[R1]---+||+---+---|C1|---+---O [Ring 2]
-                      S||S   |          |
-                  T1: S||S  [R2]       [R3]
-                      S||S   |          |
-[Line GND] O----------+||+---+----------+---O [Sleeve]
-```
-Explanation of Symbols:
-
-* [R1]: 2.2 kΩ series resistor (primary side attenuation)
-* T1: 1:1 audio transformer
-* [C1]: 2.2 µF capacitor (DC blocking)
-* [R2]: 100 Ω damping resistor (across secondary)
-* [R3]: 2.2 kΩ MIC detect resistor (between MIC and GND)
-* [Line IN], [Line GND]: input from radio/sound card
-* [Ring 2], [Sleeve]: TRRS plug connections to smartphone
+> 本仓库由上游项目 fork 而来，原始说明见[上游仓库](https://github.com/xdsopl/robot36)。
